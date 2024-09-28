@@ -190,6 +190,52 @@ button:hover {
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
     font-size: 30px;
 }
+
+.select-option-mode {
+    position: relative; /* Positioning context for the ::after pseudo-element */
+    width: 100%; /* Full width */
+    height: 400px; /* Fixed height */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+    text-align: center; /* Center text within the element */
+    background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7)); /* Background gradient */
+    border-radius: 20px; /* Rounded corners */
+    overflow: hidden; /* Hide overflow from the pseudo-element */
+}
+.select-option-mode::after {
+    content: ""; /* Required for pseudo-element */
+    position: absolute; /* Absolute positioning */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+    bottom: 0; /* Align to the bottom */
+    box-shadow: inset -5px -2px 5px 1px rgba(25, 35, 1, 0.5); /* Internal shadow */
+    border-radius: 20px; /* Match parent border-radius */
+    border: 8px solid rgb(15, 21, 1); /* Border for the pseudo-element */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+.select-option-mode button {
+    margin: 5px;
+    padding: 20PX;
+    width: 150px;
+    background: url(./images/piedra_fondo_1.png) center/cover;
+    box-shadow: 2px 2px 5px 2px rgba(25, 35, 1, 0.5);
+    border: none;
+    border-radius: 10px;
+    font-size: 22px;
+    color: rgb(212, 212, 212);
+}
+.select-option-mode>h2 {
+    margin: 20px;
+    padding: 10px;
+    width: 300px;
+    /* background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7)); */
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+    font-size: 30px;
+}
+
 .select-symbol {
     position: relative;
     display: flex;

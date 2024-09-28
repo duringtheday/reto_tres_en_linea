@@ -100,19 +100,21 @@ function Game() {
     const [xIsNext, setXIsNext] = React.useState(null);
     const [showMovements, setShowMovements] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
-    const [loadingDots, setLoadingDots] = React.useState(''); // State for loading dots
+    const [loadingDots, setLoadingDots] = React.useState('');
+    const [playerMode, setPlayerMode] = React.useState(null);
+    const [computerSymbol, setComputerSymbol] = React.useState(null); // Set default computer symbol
 
     const currentSquares = history[currentMove];
 
     React.useEffect(() => {
         const interval = setInterval(() => {
-            setLoadingDots(prev => (prev.length < 3 ? prev + '.' : '')); // Add dot or reset
-        }, 400); // Change interval as needed
+            setLoadingDots(prev => (prev.length < 3 ? prev + '.' : ''));
+        }, 400);
 
         const loadingTimeout = setTimeout(() => {
             setLoading(false);
             clearInterval(interval);
-        }, 3000); // Change this time based on your loading logic
+        }, 3000);
 
         return () => {
             clearInterval(interval);
@@ -125,28 +127,78 @@ function Game() {
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
-        setXIsNext(!xIsNext);
+        setXIsNext(!xIsNext); // Toggle turn
     }
 
-    // Function to jump to a specific move
-    const jumpTo = (nextMove) => {
+    // Helper function to determine if there's a winner
+    function calculateWinner(squares) {
+        const lines = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertical
+            [0, 4, 8], [2, 4, 6]             // Diagonal
+        ];
+
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                return squares[a]; // Return 'X' or 'O' (the winner)
+            }
+        }
+        return null; // No winner yet
+    }
+
+    // React hook to handle computer's move
+    React.useEffect(() => {
+        // Prevent the computer from making a move if there's already a winner
+        if (playerMode === 1 && xIsNext === false && !calculateWinner(currentSquares)) {
+            // Add delay before the computer plays
+            const timeoutId = setTimeout(() => {
+                const nextSquares = [...currentSquares];
+
+                const availableSquares = nextSquares
+                    .map((square, index) => (square === null ? index : null))
+                    .filter(index => index !== null);
+
+                if (availableSquares.length > 0) {
+                    const randomSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+
+                    // Ensure the computer uses the correct symbol
+                    const computerSymbol = xIsNext === false ? 'O' : 'X'; // Correctly assign based on xIsNext state
+                    nextSquares[randomSquare] = computerSymbol;
+
+                    // Call handlePlay to update the board after the computer's move
+                    handlePlay(nextSquares);
+                }
+            }, 400); // 400ms delay for computer's move
+
+            // Cleanup timeout if effect is re-triggered
+            return () => clearTimeout(timeoutId);
+        }
+    }, [xIsNext, playerMode, currentSquares, computerSymbol]);
+
+
+
+    const jumpTo = nextMove => {
         setCurrentMove(nextMove);
     };
 
-    // Function to handle the player selecting a symbol
-    const handleSelectSymbol = (symbol) => {
-        setXIsNext(symbol === 'X');
+    const handleSelectSymbol = symbol => {
+        setXIsNext(symbol === 'X'); // Set to true if symbol is 'X', false otherwise
+        setComputerSymbol(symbol === 'X' ? 'O' : 'X'); // Set computer symbol based on player selection
     };
 
-    // Function to handle starting a new game
     const handleStartNewGame = () => {
         setHistory([Array(9).fill(null)]);
         setCurrentMove(0);
         setXIsNext(null);
+        setPlayerMode(null);
         setShowMovements(false);
     };
 
-    // Map over the history to display all movements
+    const handlePlayerMode = mode => {
+        setPlayerMode(mode);
+    };
+
     const movements = history.map((_, move) => (
         move > 0 && (
             <li key={move}>
@@ -157,22 +209,31 @@ function Game() {
         )
     ));
 
-    // Function to toggle the visibility of the movements
     const toggleMovements = () => {
         setShowMovements(!showMovements);
     };
 
-    // Show loading screen
     if (loading) {
         return (
             <div id="title-tic-tac-toe">
                 <h1 id="loading-title">Tic Tac Toe</h1>
-                <h2>Loading{loadingDots}</h2> {/* Updated to show loading dots */}
+                <h2>Loading{loadingDots}</h2>
             </div>
         );
     }
 
-    // Show symbol selection if players haven't chosen yet
+    if (playerMode === null) {
+        return (
+            <div id="title-tic-tac-toe">
+                <div className="select-option-mode">
+                    <h2>Select Player Mode:</h2>
+                    <button onClick={() => handlePlayerMode(1)}>1 Player</button>
+                    <button onClick={() => handlePlayerMode(2)}>2 Players</button>
+                </div>
+            </div>
+        );
+    }
+
     if (xIsNext === null) {
         return (
             <div id="title-tic-tac-toe">
@@ -212,6 +273,10 @@ function Game() {
         </div>
     );
 }
+
+
+
+
 
 
 
