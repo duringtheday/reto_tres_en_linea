@@ -1,0 +1,390 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: url(./images/tic_tac_toe_3.jpg) no-repeat center center/cover;
+}
+
+#main-container {
+    position: relative;
+    
+}
+
+.square {
+    position: relative;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 0px;
+    padding: 20px;
+    width: 150px;
+    height: 150px;
+    font-size: 100px;
+    background: url(./images/pizarra_fondo.png);
+    border-radius: 0px;
+    border: 2px groove black;
+    color: aliceblue;
+    transition: all 0.2s linear;
+    z-index: 1000;
+    cursor: pointer;
+}
+button:hover {
+    transform: scale(1.03);
+}
+
+.board-container {
+    position: absolute;
+    left: -35px;
+    width: 450px;
+    height: 450px;
+    background: rgb(51, 51, 51); /* Specify color more clearly */
+    filter: blur(7px); /* Added 'px' to blur */
+    box-shadow: 5px 15px 24px 3px rgba(0, 0, 0, 0.7); /* Adjusted shadow for a smoother effect */
+    transform: translate(8%, -100%);
+    z-index: -1; /* If this makes the element hidden, try adjusting it to a higher value */
+}
+
+
+.status {
+    position: relative;
+    top: 0;
+    left: -4.5%;
+    margin: 20px;
+    padding: 20px;
+    width: 100%;
+    font-size: 50px;
+    color: rgb(15, 32, 2);
+    background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7));
+    border-radius: 20px 20px 0 0;
+    text-align: center;
+    transform: translateY(110px); /* Ensure this matches the initial animation state */
+    opacity: 0;
+    animation: status-view 0.5s ease-in-out forwards; /* Added duration, timing, and 'forwards' */
+}
+
+@keyframes status-view {
+    0% {
+        transform: translateY(110px); /* Start from the initial translateY value */
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(25px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(25px);
+        opacity: 1;
+    }
+}
+
+.board-row {
+    display: flex;
+    justify-content: center;
+}
+
+#title-tic-tac-toe>h1 {
+    position: absolute;
+    top: 10%;
+    left: 0%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background: linear-gradient(to right, rgba(202, 138, 0, 0.7), rgba(244, 244, 244, 0.7));
+    font-size: 7rem;
+    text-align: center;
+    color: rgb(14, 22, 1);
+}
+#title-tic-tac-toe>h2 {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    /* background: linear-gradient(to right, rgba(202, 138, 0, 0.7), rgba(244, 244, 244, 0.7)); */
+    font-size: 7rem;
+    text-align: center;
+    color: rgba(234, 234, 234, 0.7);
+}
+
+.game-board {
+    margin: 20px;
+    padding: 20px;
+    /* width: 50px; */
+}
+.game-info {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 20px;
+    /* width: 50px; */
+    /* background: black; */
+}
+
+#start-new-game {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 20px;
+    background: url(./images/pizarra_fondo_2.jpg);
+    box-shadow: 2px 2px 5px 2px rgb(24, 24, 24);
+    border-radius: 10px;
+    border: none;
+    color: rgb(222, 222, 222);
+    font-size: 24px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+#start-new-game:hover {
+    transform: scale(1.05);
+    filter: saturate(11) sepia(0.5);
+}
+
+.select-option {
+    position: relative; /* Positioning context for the ::after pseudo-element */
+    width: 100%; /* Full width */
+    height: 400px; /* Fixed height */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+    text-align: center; /* Center text within the element */
+    background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7)); /* Background gradient */
+    border-radius: 20px; /* Rounded corners */
+    overflow: hidden; /* Hide overflow from the pseudo-element */
+}
+.select-option::after {
+    content: ""; /* Required for pseudo-element */
+    position: absolute; /* Absolute positioning */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+    bottom: 0; /* Align to the bottom */
+    box-shadow: inset -5px -2px 5px 1px rgba(25, 35, 1, 0.5); /* Internal shadow */
+    border-radius: 20px; /* Match parent border-radius */
+    border: 8px solid rgb(15, 21, 1); /* Border for the pseudo-element */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+.select-option>h2 {
+    margin: 20px;
+    padding: 10px;
+    width: 300px;
+    /* background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7)); */
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+    font-size: 30px;
+}
+.select-symbol {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    padding: 20px;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(to right, rgba(195, 195, 195, 0.7), rgba(244, 244, 244, 0.7));
+    border-radius: 10px;
+    font-size: 80px;
+    color: rgb(14, 25, 1);
+    text-align: center;
+    cursor: pointer;
+}
+.select-symbol::after {
+    content: ""; /* Add content to the pseudo-element */
+    position: absolute; /* Position it absolutely within the parent */
+    top: 0; /* Adjust these values to position the shadow/border */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset -2px -2px 5px 1px rgba(35, 1, 1, 0.5); /* Internal shadow */
+    border-radius: 10px; /* Ensure it matches the parent border-radius */
+    border: 8px solid red; /* Reduced border size for a cleaner look */
+    /* transition: opacity 0.2s; Smooth transition for visibility */
+}
+
+#winning-line-horizontal {
+    position: absolute;
+    height: 4px;
+    background: red;
+    border: 7px solid red;
+    opacity: 0;
+    transform-origin: left;
+    animation: line-draw-horizontal 0.5s ease-in-out forwards;
+    width: 400px; /* Adjust width for horizontal line */
+    transform: scaleX(0); /* Start with the line not visible */
+    opacity: 0;
+    z-index: 1000;
+}
+/* Keyframes for line drawing */
+@keyframes line-draw-horizontal {
+    0% {
+        transform: scaleX(0); /* Line is not drawn for horizontal */
+        opacity: 0.7;
+    }
+    100% {
+        transform: scaleX(1); /* Line fully drawn for horizontal */
+        opacity: 0.7;
+    }
+}
+
+#winning-line-vertical {
+    position: absolute;
+    height: 4px;
+    background: red;
+    border: 7px solid red;
+    opacity: 0;
+    transform-origin: bottom;
+    animation: line-draw 0.5s ease-in-out forwards;
+    width: 400px; /* Adjust width for horizontal line */
+    transform: scaleY(0); /* Start with the line not visible */
+    opacity: 0;
+    z-index: 1000;
+}
+/* To change the animation for vertical lines */
+#winning-line-vertical {
+    animation: line-draw-vertical 0.5s ease-in-out forwards;
+}
+
+@keyframes line-draw-vertical {
+    0% {
+        transform: scaleY(0); /* Line is not drawn for vertical */
+        opacity: 0.7;
+    }
+    100% {
+        transform: scaleY(1); /* Line fully drawn for vertical */
+        opacity: 0.7;
+    }
+}
+#winning-line-left-diagonal {
+    position: absolute;
+    height: 4px;
+    background: red;
+    border: 7px solid red;
+    opacity: 0;
+    transform-origin: right;
+    animation: line-draw 0.5s ease-in-out forwards;
+    width: 400px; /* Adjust width for horizontal line */
+    transform: scale(0) rotate(45deg); /* Start with the line not visible */
+    opacity: 0;
+    z-index: 1000;
+}
+/* To change the animation for vertical lines */
+#winning-line-left-diagonal {
+    animation: line-draw-left-diagonal 0.5s ease-in-out forwards;
+}
+
+@keyframes line-draw-left-diagonal {
+    0% {
+        transform: scale(0) rotate(45deg); /* Line is not drawn for vertical */
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1) rotate(45deg); /* Line fully drawn for vertical */
+        opacity: 0.7;
+    }
+}
+
+#winning-line-right-diagonal {
+    position: absolute;
+    height: 4px;
+    background: red;
+    border: 7px solid red;
+    opacity: 0;
+    transform-origin: left;
+    animation: line-draw 0.5s ease-in-out forwards;
+    width: 400px; /* Adjust width for horizontal line */
+    transform: scale(0) rotate(-45deg); /* Start with the line not visible */
+    opacity: 0;
+    z-index: 1000;
+}
+/* To change the animation for vertical lines */
+#winning-line-right-diagonal {
+    animation: line-draw-right-diagonal 0.5s ease-in-out forwards;
+}
+
+@keyframes line-draw-right-diagonal {
+    0% {
+        transform: scale(0) rotate(-45deg); /* Line is not drawn for vertical */
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1) rotate(-45deg); /* Line fully drawn for vertical */
+        opacity: 0.7;
+    }
+}
+
+.movements-container {
+    margin-bottom: 20px; /* Add spacing below movements */
+}
+
+.new-game-container {
+    margin-top: 10px; /* Add spacing above the new game button */
+}
+
+.movements-toggle>button{
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    padding: 20px;
+    width: 215px;
+    /* background: linear-gradient(to top, rgb(43, 43, 43), grey); */
+    background: url(./images/tic_tac_toe_2.jpg) center;
+    border-radius: 10px;
+    border: none;
+    font-size: 19px;
+    color: rgb(255, 166, 0);
+    letter-spacing: 0.8px;
+    z-index: 1100;
+    cursor: pointer;
+}
+.movements-container {
+    position: absolute;
+    top: 150px;
+    left: 20px;
+    float: left;
+    /* padding: 20px; */
+    width: 215px;
+    min-height: auto;
+    /* border-radius: 0 0 10px 10px; */
+    background: rgb(46, 46, 46);
+    font-size: 16px;
+    z-index: 1001;
+}
+.movements-container>ol {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 12px;
+    /* border-radius: 10px; */
+}
+#movements {
+    float: left;
+    padding: 20px;
+    width: 215px;
+    /* background: linear-gradient(to top, rgb(43, 43, 43), grey); */
+    background: url(./images/tic_tac_toe_2.jpg) center/cover;
+    border-bottom: 2px solid rgb(206, 142, 5);
+    letter-spacing: 0.8px;
+    color: rgb(255, 252, 240);
+    z-index: 1001;
+    cursor: pointer;
+}
+
