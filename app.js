@@ -253,11 +253,19 @@ React.useEffect(() => {
         handleStartNewGame(); // Reset the game state
     };
 
-    // Function to go back to select symbol page
+    // // Function to go back to select symbol page
+    // const handleBackToSelect = () => {
+    //     setInGame(false); // Set inGame to false to indicate not in game
+    //     setShowSelectSymbol(true); // Show select symbol page
+    //     handleStartNewGame(); // Reset the game state
+    // };
+
+
     const handleBackToSelect = () => {
-        setInGame(false); // Set inGame to false to indicate not in game
-        setShowSelectSymbol(true); // Show select symbol page
-        handleStartNewGame(); // Reset the game state
+        setInGame(false); // Indicate that the game is not in progress
+        setXIsNext(null); // Reset the symbol selection to allow re-selection
+        setShowSelectSymbol(true); // Ensure the symbol selection interface is displayed
+        handleStartNewGame(); // Reset the game state for a fresh start
     };
 
     const handleStartNewGame = () => {
