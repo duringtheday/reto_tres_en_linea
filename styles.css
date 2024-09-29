@@ -264,6 +264,7 @@ button:hover {
     border-radius: 10px; /* Ensure it matches the parent border-radius */
     border: 8px solid red; /* Reduced border size for a cleaner look */
     /* transition: opacity 0.2s; Smooth transition for visibility */
+    pointer-events: none;
 }
 
 #winning-line-horizontal {
@@ -434,3 +435,51 @@ button:hover {
     cursor: pointer;
 }
 
+#back-to-select {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 0;
+    height: 0;
+    background: transparent;
+    border: none;
+}
+#back-arrow-select {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 40px;
+    border: none;
+    background: transparent;
+    filter: contrast(0.5) invert(50%) saturate(50%) brightness(3);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    
+}
+#back-arrow-select:hover {
+    transform: scale(1.05);
+}
+
+#back-mode {
+    position: absolute;
+    top: 200px;
+    right: 250px;
+    width: 0;
+    height: 0;
+    background: transparent;
+    border: none;
+}
+#back-arrow-mode {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 50px;
+    background: transparent;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    z-index: 1110;
+}
+#back-arrow-mode:hover {
+    transform: scale(1.05);
+}

@@ -103,8 +103,13 @@ function Game() {
     const [loadingDots, setLoadingDots] = React.useState('');
     const [playerMode, setPlayerMode] = React.useState(null);
     const [computerSymbol, setComputerSymbol] = React.useState(null); // Set default computer symbol
+    const [inGame, setInGame] = React.useState(false); // New state for game status
+
 
     const currentSquares = history[currentMove];
+
+
+
 
     React.useEffect(() => {
         const interval = setInterval(() => {
@@ -159,16 +164,16 @@ function Game() {
                     .map((square, index) => (square === null ? index : null))
                     .filter(index => index !== null);
 
+                // Check to see who is playing before the computer makes a move
+                const computerSymbol = xIsNext === 'O' ? 'X' : 'O';
+
                 if (availableSquares.length > 0) {
                     const randomSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+                    nextSquares[randomSquare] = computerSymbol; // Use the correct symbol based on player's choice
 
-                    // Ensure the computer uses the correct symbol
-                    const computerSymbol = xIsNext === false ? 'O' : 'X'; // Correctly assign based on xIsNext state
-                    nextSquares[randomSquare] = computerSymbol;
-
-                    // Call handlePlay to update the board after the computer's move
-                    handlePlay(nextSquares);
+                    handlePlay(nextSquares); // Update the board
                 }
+
             }, 400); // 400ms delay for computer's move
 
             // Cleanup timeout if effect is re-triggered
@@ -183,8 +188,25 @@ function Game() {
     };
 
     const handleSelectSymbol = symbol => {
-        setXIsNext(symbol === 'X'); // Set to true if symbol is 'X', false otherwise
-        setComputerSymbol(symbol === 'X' ? 'O' : 'X'); // Set computer symbol based on player selection
+        if (symbol === 'X') {
+            setXIsNext(true);
+            setComputerSymbol('O');
+        } else if (symbol === 'O') {
+            setXIsNext(false);
+            setComputerSymbol('X');
+        }
+    };
+
+    const handleBackToSelectMode = () => {
+        setInGame(false); // Set inGame to false to show selection screen
+        handleStartNewGame(); // Reset the game state
+    };
+
+    // Function to go back to select symbol page
+    const handleBackToSelect = () => {
+        setInGame(false); // Set inGame to false to indicate not in game
+        setShowSelectSymbol(true); // Show select symbol page
+        handleStartNewGame(); // Reset the game state
     };
 
     const handleStartNewGame = () => {
@@ -241,6 +263,9 @@ function Game() {
                     <h2>Select Your Symbol:</h2>
                     <button className="select-symbol" onClick={() => handleSelectSymbol('X')}>X</button>
                     <button className="select-symbol" onClick={() => handleSelectSymbol('O')}>O</button>
+                    <button id="back-mode" onClick={handleBackToSelectMode}>
+                        <img id="back-arrow-mode" src="./images/hacia-atras.png" alt="back arrow" />
+                    </button>
                 </div>
             </div>
         );
@@ -250,6 +275,9 @@ function Game() {
         <div className="game">
             <div className="game-board">
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+                <button id="back-to-select" onClick={handleBackToSelect}>
+                    <img id="back-arrow-select" src="./images/hacia-atras.png" alt="back arrow" />
+                </button>
             </div>
             <div className="game-info">
                 {history.length > 1 && (
