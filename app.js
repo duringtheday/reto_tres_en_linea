@@ -152,84 +152,84 @@ function Game() {
         return null; // No winner yet
     }
 
-// React hook to handle computer's move
-React.useEffect(() => {
-    // Prevent the computer from making a move if there's already a winner
-    if (playerMode === 1 && xIsNext === false && !calculateWinner(currentSquares)) {
-        // Add delay before the computer plays
-        const timeoutId = setTimeout(() => {
-            const nextSquares = [...currentSquares];
+    // React hook to handle computer's move
+    React.useEffect(() => {
+        // Prevent the computer from making a move if there's already a winner
+        if (playerMode === 1 && xIsNext === false && !calculateWinner(currentSquares)) {
+            // Add delay before the computer plays
+            const timeoutId = setTimeout(() => {
+                const nextSquares = [...currentSquares];
 
-            // Find all available squares (those that are null)
-            const availableSquares = nextSquares
-                .map((square, index) => (square === null ? index : null))
-                .filter(index => index !== null);
+                // Find all available squares (those that are null)
+                const availableSquares = nextSquares
+                    .map((square, index) => (square === null ? index : null))
+                    .filter(index => index !== null);
 
-            const computerSymbol = xIsNext ? 'X' : 'O'; // Use correct symbol based on player's choice
-            const playerSymbol = xIsNext ? 'O' : 'X'; // Opposite of computer's symbol
+                const computerSymbol = xIsNext ? 'X' : 'O'; // Use correct symbol based on player's choice
+                const playerSymbol = xIsNext ? 'O' : 'X'; // Opposite of computer's symbol
 
-            // Function to check if two symbols are in a line and the third square is available
-            const findWinningMove = (symbol) => {
-                const lines = [
-                    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-                    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-                    [0, 4, 8], [2, 4, 6]             // Diagonals
-                ];
+                // Function to check if two symbols are in a line and the third square is available
+                const findWinningMove = (symbol) => {
+                    const lines = [
+                        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                        [0, 4, 8], [2, 4, 6]             // Diagonals
+                    ];
 
-                // Loop through each line to find a potential winning move
-                for (let line of lines) {
-                    const [a, b, c] = line;
-                    if (
-                        nextSquares[a] === symbol && 
-                        nextSquares[b] === symbol && 
-                        nextSquares[c] === null
-                    ) {
-                        return c; // Return the index of the winning move
+                    // Loop through each line to find a potential winning move
+                    for (let line of lines) {
+                        const [a, b, c] = line;
+                        if (
+                            nextSquares[a] === symbol &&
+                            nextSquares[b] === symbol &&
+                            nextSquares[c] === null
+                        ) {
+                            return c; // Return the index of the winning move
+                        }
+                        if (
+                            nextSquares[a] === symbol &&
+                            nextSquares[c] === symbol &&
+                            nextSquares[b] === null
+                        ) {
+                            return b;
+                        }
+                        if (
+                            nextSquares[b] === symbol &&
+                            nextSquares[c] === symbol &&
+                            nextSquares[a] === null
+                        ) {
+                            return a;
+                        }
                     }
-                    if (
-                        nextSquares[a] === symbol && 
-                        nextSquares[c] === symbol && 
-                        nextSquares[b] === null
-                    ) {
-                        return b;
-                    }
-                    if (
-                        nextSquares[b] === symbol && 
-                        nextSquares[c] === symbol && 
-                        nextSquares[a] === null
-                    ) {
-                        return a;
-                    }
+                    return null;
+                };
+
+                let chosenSquare = null;
+
+                // First, try to find a winning move for the computer
+                chosenSquare = findWinningMove(computerSymbol);
+
+                // If no winning move, try to block the player from winning
+                if (chosenSquare === null) {
+                    chosenSquare = findWinningMove(playerSymbol);
                 }
-                return null;
-            };
 
-            let chosenSquare = null;
+                // If no blocking or winning move, pick a random square
+                if (chosenSquare === null && availableSquares.length > 0) {
+                    chosenSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+                }
 
-            // First, try to find a winning move for the computer
-            chosenSquare = findWinningMove(computerSymbol);
+                if (chosenSquare !== null) {
+                    nextSquares[chosenSquare] = computerSymbol; // Place the computer's symbol
+                    handlePlay(nextSquares); // Update the board
+                }
 
-            // If no winning move, try to block the player from winning
-            if (chosenSquare === null) {
-                chosenSquare = findWinningMove(playerSymbol);
-            }
+            }, 400); // 400ms delay for computer's move
 
-            // If no blocking or winning move, pick a random square
-            if (chosenSquare === null && availableSquares.length > 0) {
-                chosenSquare = availableSquares[Math.floor(Math.random() * availableSquares.length)];
-            }
-
-            if (chosenSquare !== null) {
-                nextSquares[chosenSquare] = computerSymbol; // Place the computer's symbol
-                handlePlay(nextSquares); // Update the board
-            }
-
-        }, 400); // 400ms delay for computer's move
-
-        // Cleanup timeout if effect is re-triggered
-        return () => clearTimeout(timeoutId);
-    }
-}, [xIsNext, playerMode, currentSquares, handlePlay]);
+            // Cleanup timeout if effect is re-triggered
+            return () => clearTimeout(timeoutId);
+        }
+    }, [xIsNext, playerMode, currentSquares, handlePlay]);
 
 
 
@@ -275,6 +275,13 @@ React.useEffect(() => {
         setPlayerMode(null);
         setShowMovements(false);
     };
+
+    // Reset game function to clear the board and restart the game
+    function handleResetGame() {
+        setHistory([Array(9).fill(null)]); // Reset history to a blank board
+        setCurrentMove(0);                 // Reset current move to 0
+        setXIsNext(true);                  // Reset turn to player 'X'
+    }
 
     const handlePlayerMode = mode => {
         setPlayerMode(mode);
@@ -355,6 +362,9 @@ React.useEffect(() => {
             <div className="game-controls">
                 <button id="start-new-game" onClick={handleStartNewGame}>
                     Start New Game
+                </button>
+                <button id="reset-game" onClick={handleResetGame}>
+                    Reset Game
                 </button>
             </div>
         </div>
